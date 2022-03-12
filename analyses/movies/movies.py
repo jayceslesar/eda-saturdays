@@ -26,7 +26,7 @@ Most common genre per actor
 """
 
 
-def frequency(df, column):
+def counts(df, column):
     """Takes df and variable with list vals and flattens to counts dictionary.
     """
     to_flatten = df[column].values
