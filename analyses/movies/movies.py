@@ -11,19 +11,28 @@ for col in df.columns:
 """
 Things to analyze
 
+Frequency Distributions
 Actor frequency distribution
 Director frequency distribution
-
 Story frequency distribution
-Total Movies/year
+
+Numeric Distributions
 Popularity distribution
 Runtime distribution
+
+Numeric Distributions in Time
+
+Numeric Distributions by Categories
 Average rating/director
 Average rating/actor
 Average rating/genre
 Average popularity/director
+
+Conditional Frequencies
 Most common genre per director
 Most common genre per actor
+
+Networks!
 """
 
 
@@ -45,3 +54,5 @@ def frequency(df, column):
                 frequency[thing] = 1
 
     return frequency
+
+
