@@ -13,6 +13,7 @@ Things to analyze
 
 Actor frequency distribution
 Director frequency distribution
+
 Story frequency distribution
 Total Movies/year
 Popularity distribution
