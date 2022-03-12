@@ -37,6 +37,8 @@ Networks!
 
 
 def counts(df, column):
+    """Takes df and variable with list vals and flattens to counts dictionary.
+    """
     to_flatten = df[column].values
     counts = {}
     for things in to_flatten:
