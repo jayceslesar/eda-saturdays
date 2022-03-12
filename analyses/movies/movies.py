@@ -12,6 +12,7 @@ for col in df.columns:
 """
 Things to analyze
 
+Done :)
 Frequency Distributions
 Actor frequency distribution
 Director frequency distribution
@@ -28,6 +29,7 @@ Average rating/actor
 Average rating/genre
 Average popularity/director
 
+Done :)
 Conditional Frequencies
 Most common genre per director
 Most common genre per actor
