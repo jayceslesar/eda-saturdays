@@ -7,7 +7,7 @@ Let's first look at all of the missing values in this dataset per column.
 | Variable | Data Type | Converted Data Type |
 | -----------| -------- | -------- |
 | id | string |  |
-| name | extraction | |
+| name | string | |
 | year | string | integer |
 | grade | string | |
 | runtime | string | integer |
