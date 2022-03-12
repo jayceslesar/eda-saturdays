@@ -70,6 +70,47 @@ def plot_counts(df, column):
     return fig
 
 
+def conditional(df, column, cutoff):
+    count = counts(df, column)
+    keys = [key for key in count if count[key] > cutoff]
+    to_plot = {}
+    for key in keys:
+        if column == 'actors':
+            movies = df[df[column].str.contains(key)]
+        else:
+            movies = df[df[column] == key]
+        genre_counts = counts(movies, 'genre')
+        highest_genre_key = list(genre_counts.keys())[-1]
+        to_plot[f'{key} - {highest_genre_key}'] = genre_counts[highest_genre_key]
+
+    sorted_to_plot = dict(sorted(to_plot.items(), key=lambda item: item[1]))
+    x = []
+    y = []
+    for key in sorted_to_plot:
+        x.append(key)
+        y.append(sorted_to_plot[key])
+
+    return x, y
+
+
+def most_common_genre_plots(df):
+    cutoff = 25
+    x, y = conditional(df, 'directors', cutoff)
+    fig = go.Figure([go.Bar(x=x, y=y)])
+    fig.update_layout(title=f'Movie Genre Count for Most Common Genre for a Director who Directed > {cutoff} Movies')
+    fig.update_xaxes(title='Director - Most Common Genre')
+    fig.update_yaxes(title='Count')
+    fig.show()
+
+    cutoff = 50
+    x, y = conditional(df, 'actors', cutoff)
+    fig = go.Figure([go.Bar(x=x, y=y)])
+    fig.update_layout(title=f'Movie Genre Count for Most Common Genre for an Actor Who Acted in > {cutoff} Movies')
+    fig.update_xaxes(title='Actor - Most Common Genre')
+    fig.update_yaxes(title='Count')
+    fig.show()
+
+
 def n_sub_k_plots(df):
     director_fig = plot_counts(df, 'directors')
     director_fig.update_xaxes(title='Log 10 Number of Movies Directed')
@@ -89,3 +130,4 @@ def n_sub_k_plots(df):
     story_fig.update_layout(title='Zipf Law of Story Counts')
     story_fig.show()
 
+most_common_genre_plots(df)
