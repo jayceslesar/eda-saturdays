@@ -129,5 +129,3 @@ def n_sub_k_plots(df):
     story_fig.update_yaxes(title='Log 10 Number of Story That Appear Some Number of Times')
     story_fig.update_layout(title='Zipf Law of Story Counts')
     story_fig.show()
-
-most_common_genre_plots(df)
