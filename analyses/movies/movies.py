@@ -19,7 +19,26 @@ Popularity distribution
 Runtime distribution
 Average rating/director
 Average rating/actor
+Average rating/genre
 Average popularity/director
 Most common genre per director
 Most common genre per actor
 """
+
+
+def frequency(df, column):
+    to_flatten = df[column].values
+    frequency = {}
+    for things in to_flatten:
+        if ',' in things:
+            splits = things.split(',')
+        else:
+            splits = [things]
+
+        for thing in splits:
+            if thing in frequency:
+                frequency[thing] += 1
+            else:
+                frequency[thing] = 1
+
+    return frequency
