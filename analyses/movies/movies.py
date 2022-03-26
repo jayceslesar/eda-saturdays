@@ -1,13 +1,19 @@
 from locale import D_FMT
 import os
+from bleach import clean
 import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.figure_factory as ff
 
+FIRST_MOVIE_YEAR = 1878
+THIS_YEAR = 2022
+
 # TODO: add optional categorical
 def plot_mean_time(df, num_col:str):
-    pass
+    sorted_df = df.sort_values(by=["year"], ascending=False)
+    clean_df = sorted_df[(sorted_df['year'] > FIRST_MOVIE_YEAR) & (sorted_df['year'] < THIS_YEAR)].dropna(subset=['year', num_col])
+    clean_df['year'] = clean_df['year'].astype(str)
 
 def clean_integer(df, col_name):
     """Converts year from string with parentheses to integer year value.
@@ -54,9 +60,10 @@ for col in float_cols:
 for col in int_cols:
     clean_integer(df, col)
 
+plot_mean_time(df, "rating")
 
-for col in df.columns:
-    print(f"{col}: {df.iloc[0][col]}, {type(df.iloc[0][col])}")
+# for col in df.columns:
+#     print(f"{col}: {df.iloc[0][col]}, {type(df.iloc[0][col])}")
 
 """
 Things to analyze
