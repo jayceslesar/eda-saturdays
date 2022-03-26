@@ -4,13 +4,15 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
 
+# TODO: add optional categorical
+def plot_mean_time(df, num_col:str):
+    pass
 
-def clean_numeric(df, col_name):
+def clean_integer(df, col_name):
     """Converts year from string with parentheses to integer year value.
     """
     vals = []
     for val in df[col_name].values:
-
         if not pd.isna(val):
             digits = ""
             for c in val:
@@ -27,6 +29,12 @@ def clean_numeric(df, col_name):
     df[col_name] = np.asarray(vals)
 
 
+def clean_float(df, col_name):
+    """Converts year from string with parentheses to integer year value.
+    """
+    df[col_name] = [float(val) if val != "None" else None for val in df[col_name].values]
+
+
 def clean_runtime(df):
     """Converts runtime from string expression in minutes to integer year in minutes.
     """
@@ -37,8 +45,14 @@ data_path = os.path.join('data', 'imdb_data.csv')
 df = pd.read_csv(data_path)  # global read
 
 # Data Cleaning
-clean_numeric(df, "year")
-clean_numeric(df, "runtime")
+int_cols = ["year",  "runtime", "votes"]
+float_cols = ["rating", "popularity"]
+
+for col in float_cols:
+    clean_float(df, col)
+for col in int_cols:
+    clean_integer(df, col)
+
 
 for col in df.columns:
     print(f"{col}: {df.iloc[0][col]}, {type(df.iloc[0][col])}")
