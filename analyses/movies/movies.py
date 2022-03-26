@@ -3,6 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
+import plotly.figure_factory as ff
 
 # TODO: add optional categorical
 def plot_mean_time(df, num_col:str):
@@ -179,3 +180,18 @@ def n_sub_k_plots(df):
     story_fig.update_yaxes(title='Log 10 Number of Story That Appear Some Number of Times')
     story_fig.update_layout(title='Zipf Law of Story Counts')
     story_fig.show()
+
+
+def dist_by_rating(df):
+    hist_data = []
+    names = []
+    dont_use = ['Unrated', '7', 'Passed', 'Approved', '12', 'GP', '19', 'TV-14', 'TV-PG', 'None', 'Not Rated', 'Limited', '15', 'All']
+    grouped = df.groupby(['grade'])
+    for group, data in grouped:
+        if group in dont_use:
+            continue
+        names.append(group)
+        hist_data.append(data['popularity'].values)
+
+    fig = ff.create_distplot(hist_data, names, curve_type='normal', bin_size=.05, show_hist=False)
+    fig.show()
