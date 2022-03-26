@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.figure_factory as ff
+import matplotlib.pyplot as plt
+import networkx as nx
 
 FIRST_MOVIE_YEAR = 1878
 THIS_YEAR = 2022
@@ -201,4 +203,43 @@ def dist_by_rating(df):
         hist_data.append(data['popularity'].values)
 
     fig = ff.create_distplot(hist_data, names, curve_type='normal', bin_size=.05, show_hist=False)
+    fig.show()
+
+
+def connectivity(df, colname, year):
+    d = {}
+    df = df.dropna()
+    df = df[df['year'].astype(int) == year]
+    pers_counts = counts(df, colname)
+
+    for index, row in df.iterrows():
+        persons = row[colname].split(',')
+        enough = []
+        for pers in persons:
+            if pers_counts[pers] > 0:
+                enough.append(pers)
+        if enough:
+            d[row['name']] = enough
+
+    G = nx.DiGraph(d)
+    conn_dict = nx.average_degree_connectivity(G)
+    mean_conn = np.mean([value for value in conn_dict.values()])
+
+    return mean_conn
+
+
+def plot_connectivity(df):
+    actors_conn = []
+    directors_conn = []
+    years = list(range(FIRST_MOVIE_YEAR, THIS_YEAR))
+    for year in years:
+        actors_conn.append(connectivity(df, 'actors', year))
+        directors_conn.append(connectivity(df, 'directors', year))
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=years, y=actors_conn, mode='markers', name='Actor Connectivity'))
+    fig.add_trace(go.Scatter(x=years, y=directors_conn, mode='markers', name='Director Connectivity'))
+    fig.update_layout(title=f'Average Connectivity by Year for Movies')
+    fig.update_xaxes(title='Year')
+    fig.update_yaxes(title='Average Connectivity')
     fig.show()

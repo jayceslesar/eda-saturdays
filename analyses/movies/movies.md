@@ -1,8 +1,6 @@
 # IMDB Analysis
-Data is from BTV Stat located [here](https://www.kaggle.com/hyeonwooan/imdb-data-preprocessed-using-ml20m/version/2?select=imdb_data.csv).
+Data from kaggle [here](https://www.kaggle.com/hyeonwooan/imdb-data-preprocessed-using-ml20m/version/2?select=imdb_data.csv).
 
-# Data Cleaning
-Let's first look at all of the missing values in this dataset per column.
 
 | Variable | Data Type | Converted Data Type |
 | -----------| -------- | -------- |
@@ -20,30 +18,12 @@ Let's first look at all of the missing values in this dataset per column.
 | actors_order | string | |
 | directors_order | string | |
 | popularity | float | |
+# Data Cleaning
+Year variable is pretty bad, needed a good amount of data cleaning brought to you by the function `clean_integer`.
 
-The `park` variable looks pretty bad. Let's remove it, and use it later when we want to compare park value or tree distributions within parks.
+On closer inspection we can see that the actors and directors columns often have multiple of each, not not all. This is ripe for a network
 
-Upon looking closer, we can see that the `species` column often has a species and a subspecies, separated by a comma. Let's try to parse this out and have a `species` and `subspecies` column.
 
-Before Parsing:
-
-| species |
-| ------- |
-| arborvitae |
-| linden,littleleaf |
-| mapl,frman celebr |
-| oak,swamp amer dr |
-
-After Parsing:
-
-| species | subspecies |
-| ------- | --------- |
-| arborvitae | arborvitae |
-| linden | littleleaf |
-| mapl | frman celebr |
-| oak | swamp amer dr |
-
-Now we have a much cleaner dataset, with far less missing numbers and even a little more detailed.
 
 # Analysis
 For the analysis, I came up with a few general questions I could use this dataset to investigate, all related to tree distribution and value of different types of land by trees.  All data cleaning and graphing done in pandas and plotly respectively.
