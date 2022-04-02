@@ -5,7 +5,7 @@ import plotly.graph_objs as go
 import plotly.figure_factory as ff
 import networkx as nx
 import plotly.express as px
-colorscales = px.colors.named_colorscales()
+from collections import Counter
 
 FIRST_MOVIE_YEAR = 1878
 THIS_YEAR = 2022
@@ -252,17 +252,32 @@ def plot_mean_time(df, num_col:str):
     year_means = clean_df.groupby(['year']).mean()
     year_means["counts"] = counts_df[0].values
 
-    fig1 = px.scatter(year_means, x=year_means.index, y=num_col, color = "counts", color_continuous_scale="blackbody")
+    fig1 = px.scatter(year_means, x=year_means.index, y=num_col, color="counts", size = "counts", color_continuous_scale="blackbody")
     fig2 = px.line(year_means, x=year_means.index, y=num_col)
     fig3 = go.Figure(data=fig1.data + fig2.data, layout=fig1.layout)
     fig3.update_xaxes(title='Year')
     fig3.update_yaxes(title='Average Rating')
-    fig3.update_layout(title='Average Movie Ratings over Time')
+    fig3.update_layout(title='Average Movie Ratings over Time', width=1100, height=700)
     fig3.write_image("analyses/movies/images/"+num_col+".png")
+
 
 def plot_col_dist(df, col, title):
     fig = px.histogram(df, x=col, marginal="box")
-    fig.update_layout(title=title)
+    fig.update_layout(title=title, width=1100, height=700)
     fig.write_image("analyses/movies/images/"+col+"_hist"+".png")
 
 
+def plot_genre_counts(df):
+    genres = ",".join(df["genre"].values).split(",")
+    genre_counts = Counter(genres)
+    genre_df = pd.DataFrame.from_dict(genre_counts, orient="index")
+
+    fig = px.bar(genre_df, x=genre_df.index, y=[0], color=genre_df.index)
+    fig.update_layout(showlegend=False)
+    fig.update_xaxes(title='Genre')
+    fig.update_yaxes(title='Count')
+    fig.update_layout(title='Number of Movies per Genre', width=1100, height=700)
+    fig.write_image("analyses/movies/images/"+"ratings_barplot"+".png")
+plot_genre_counts(df)
+plot_col_dist(df, "rating", "Movie Rating Distribution")
+plot_mean_time(df, "rating")
