@@ -264,6 +264,3 @@ def plot_ratings_dist(df, col, title):
     fig = px.histogram(df, x=col, marginal="box")
     fig.update_layout(title=title)
     fig.write_image("analyses/movies/images/"+col+"_hist"+".png")
-
-
-plot_ratings_dist(df, "rating", 'Movie Rating Distribution')
