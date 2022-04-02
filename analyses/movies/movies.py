@@ -260,5 +260,10 @@ def plot_mean_time(df, num_col:str):
     fig3.update_layout(title='Average Movie Ratings over Time')
     fig3.write_image("analyses/movies/images/"+num_col+".png")
 
+def plot_ratings_dist(df, col, title):
+    fig = px.histogram(df, x=col, marginal="box")
+    fig.update_layout(title=title)
+    fig.write_image("analyses/movies/images/"+col+"_hist"+".png")
 
-plot_mean_time(df, "rating")
+
+plot_ratings_dist(df, "rating", 'Movie Rating Distribution')
