@@ -266,7 +266,7 @@ def plot_col_dist(df, col, title):
     fig.update_layout(title=title, width=1100, height=700)
     fig.write_image("analyses/movies/images/"+col+"_hist"+".png")
 
-
+# TODO: sort and re-plot, see if zipfian
 def plot_genre_counts(df):
     genres = ",".join(df["genre"].values).split(",")
     genre_counts = Counter(genres)
@@ -278,6 +278,3 @@ def plot_genre_counts(df):
     fig.update_yaxes(title='Count')
     fig.update_layout(title='Number of Movies per Genre', width=1100, height=700)
     fig.write_image("analyses/movies/images/"+"ratings_barplot"+".png")
-plot_genre_counts(df)
-plot_col_dist(df, "rating", "Movie Rating Distribution")
-plot_mean_time(df, "rating")
