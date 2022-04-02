@@ -1,22 +1,17 @@
-from locale import D_FMT
 import os
-from bleach import clean
 import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.figure_factory as ff
-import matplotlib.pyplot as plt
 import networkx as nx
+import plotly.express as px
+colorscales = px.colors.named_colorscales()
 
 FIRST_MOVIE_YEAR = 1878
 THIS_YEAR = 2022
 
-# TODO: add optional categorical
-def plot_mean_time(df, num_col:str):
-    sorted_df = df.sort_values(by=["year"], ascending=False)
-    clean_df = sorted_df[(sorted_df['year'] > FIRST_MOVIE_YEAR) & (sorted_df['year'] < THIS_YEAR)].dropna(subset=['year', num_col])
-    clean_df['year'] = clean_df['year'].astype(str)
-
+"""DATA CLEANING
+"""
 def clean_integer(df, col_name):
     """Converts year from string with parentheses to integer year value.
     """
@@ -62,10 +57,9 @@ for col in float_cols:
 for col in int_cols:
     clean_integer(df, col)
 
-plot_mean_time(df, "rating")
-
 # for col in df.columns:
 #     print(f"{col}: {df.iloc[0][col]}, {type(df.iloc[0][col])}")
+
 
 """
 Things to analyze
@@ -243,3 +237,28 @@ def plot_connectivity(df):
     fig.update_xaxes(title='Year')
     fig.update_yaxes(title='Average Connectivity')
     fig.show()
+
+
+# TODO: add optional categorical
+def plot_mean_time(df, num_col:str):
+    sorted_df = df.sort_values(by=["year"], ascending=True)[["year", num_col]]
+    clean_df = sorted_df[(sorted_df['year'] > FIRST_MOVIE_YEAR) & (sorted_df['year'] <= THIS_YEAR)].dropna(subset=['year', num_col])
+    clean_df['year'] = clean_df['year'].astype(str)
+
+    year_counts = counts(clean_df, "year")
+    counts_df = pd.DataFrame.from_dict(year_counts, orient='index')
+    counts_df = counts_df.sort_index(ascending=True)
+
+    year_means = clean_df.groupby(['year']).mean()
+    year_means["counts"] = counts_df[0].values
+
+    fig1 = px.scatter(year_means, x=year_means.index, y=num_col, color = "counts", color_continuous_scale="blackbody")
+    fig2 = px.line(year_means, x=year_means.index, y=num_col)
+    fig3 = go.Figure(data=fig1.data + fig2.data, layout=fig1.layout)
+    fig3.update_xaxes(title='Year')
+    fig3.update_yaxes(title='Average Rating')
+    fig3.update_layout(title='Average Movie Ratings over Time')
+    fig3.write_image("analyses/movies/images/"+num_col+".png")
+
+
+plot_mean_time(df, "rating")
